@@ -11,14 +11,18 @@ let config = {
 const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
+
 var admin = require("firebase-admin");
+
 var serviceAccount = require("./serviceAccountKey.json");
+const { start } = require('repl');
 
 admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount)
 });
 
 const app = express();
+
 
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
