@@ -916,7 +916,7 @@ app.post('/api/logGuestVisit', (req,res) => {
 
 
 
-const port = 3001; // Change this to an available port
+const port = process.env.REACT_APP_PORT; // Change this to an available port
 app.listen(port, () => {
 	console.log(`Server is running on port ${port}`);
 });
