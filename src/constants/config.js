@@ -1,10 +1,1 @@
-export const serverURL = 'http://localhost:3001'
-
-let config = {
-    host    : 'localhost',
-    user    : 'root',
-    password: 'password',
-    database: 'clubhub'
-};
-
-module.exports = config;
+export const serverURL = process.env.REACT_APP_SERVER_URL;

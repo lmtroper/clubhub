@@ -1,2 +1,4 @@
 serviceAccountKey.json
 src/constants/config.js
+node_modules
+.env

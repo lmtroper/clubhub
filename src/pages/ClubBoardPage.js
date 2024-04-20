@@ -112,8 +112,8 @@ const ClubBoardPage = () => {
                         Photos
                         </ToggleButton>
             </StyledToggleButtonGroup>
-            {toggle === '1' && <Announcements />}
-            {toggle === '2' && <Events />}
+            {toggle === '1' && <Announcements clubTitle={clubTitle} />}
+            {toggle === '2' && <Events clubTitle={clubTitle} />}
             {toggle === '3' && <Members />}
             {toggle === '4' && <ImageUploadAndDisplay />}
         </Grid>

@@ -11,8 +11,6 @@ const DetailsHeader = styled(Typography)({
 
 
 const CollapsedCardContent = ({ index, expanded, event, attendance }) => {
-    console.log('in collapse')
-    console.log(attendance)
     let startTimeText = event.start_time_text.split(' ');
     let start_date = startTimeText[1] + ' ' + startTimeText[2]
     let start_time = ''

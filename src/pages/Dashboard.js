@@ -1,14 +1,13 @@
 import React, { useEffect } from "react";
 import { CircularProgress, Grid  } from "@mui/material";
-import { useUser } from '../authentication/context';
 
 import SideBar from "../components/Dashboard/SideBar";
 import DashboardAnnouncements from "../components/Dashboard/DashboardAnnouncements";
 import DashboardEvents from "../components/Dashboard/DashboardEvents";
 
-import { fetchAnnouncements, fetchSpecificClubAnnouncements } from "../api/AnnouncementsAPI";
+import { fetchAnnouncements } from "../api/AnnouncementsAPI";
 import { fetchMyClubs } from "../api/ClubsAPI";
-import { fetchSpecificClubEvents, fetchUserUpcomingEvents } from "../api/EventsAPI";
+import { fetchUserUpcomingEvents } from "../api/EventsAPI";
 import { useSelector } from "react-redux";
 
 import { transformAnnouncements, transformEvents } from "guest_content";
@@ -24,8 +23,8 @@ const Dashboard = () => {
   const [announcements, setAnnouncements] = React.useState([]);
   const [events, setEvents] = React.useState([]);
 
-  const [selectedClubAnnouncements, setSelectedClubAnnouncements] = React.useState("")
-  const [selectedClubEvents, setSelectedClubEvents] = React.useState(false)
+  const [selectedClubAnnouncements, setSelectedClubAnnouncements] = React.useState([])
+  const [selectedClubEvents, setSelectedClubEvents] = React.useState([])
 
   useEffect(() => {
     if (loggedIn) {

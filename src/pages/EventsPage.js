@@ -7,7 +7,7 @@ import { fetchPastClubEvents, fetchUpcomingClubEvents } from "../api/EventsAPI";
 import AddEvent from "../components/ClubBoardPage/Events/AddEvent";
 import { useSelector } from "react-redux";
 
-const EventsPage = () => {
+const EventsPage = ({ clubTitle }) => {
     const user = useSelector((state) => state.user.uid);
     const guest = useSelector((state) => state.guest);
     const { clubID } = useParams();
@@ -107,6 +107,7 @@ const EventsPage = () => {
                 </Grid>
             </Grid>
             <AddEvent 
+                clubTitle={clubTitle}
                 getEvents={getEvents} 
                 admin={admin} 
                 clubID={clubID}

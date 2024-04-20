@@ -5,19 +5,19 @@ import { indigo, deepOrange, lightGreen, red, deepPurple, teal } from '../../../
 
 const ButtonListItem = ({ list, emptyMessage }) => {
     const getColour = (name) => {
-        if (name.length <= 6) {
-            return indigo;
-        } else if (name.length > 6 && name.legnth <= 8) {
-            return deepOrange;
-        } else if (name.length > 8 && name.legnth <= 12) {
-            return lightGreen;
-        } else if (name.length > 12 && name.length <= 16) {
-            return red;
-        } else if (name.length > 16 && name.length <= 20) {
-            return deepPurple;
-        }
-        return teal[300];
-    }
+        console.log(name)
+        const firstLetter = name.charAt(0).toUpperCase();
+        const colorSet = [indigo, deepOrange, lightGreen, red, deepPurple];
+        const defaultColor = teal;
+    
+        // Use ASCII value to determine color index
+        const index = (firstLetter.charCodeAt(0) - 'A'.charCodeAt(0)) % colorSet.length;
+    
+        // Return the color based on the index
+        const color = colorSet[index] || defaultColor;
+        return color;
+    };
+    
     const initials = (name) => {
         let x = name.split(' ');
         if (x.length > 1) {

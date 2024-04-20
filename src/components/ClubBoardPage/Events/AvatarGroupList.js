@@ -11,7 +11,6 @@ const StyledAvatarGroup = styled(AvatarGroup)({
 
 const AvatarGroupList = ({ list }) => {
     const getColour = (name) => {
-        console.log(name)
         const firstLetter = name.charAt(0).toUpperCase();
         const colorSet = [indigo, deepOrange, lightGreen, red, deepPurple];
         const defaultColor = teal;

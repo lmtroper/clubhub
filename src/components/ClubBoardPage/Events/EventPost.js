@@ -34,9 +34,6 @@ const EventPost = ({ event, index, currentUser, pastEvent, onChange, admin, onDa
 
         if(guest.guestMode &&  guest.attendance?.[club_id]?.[event.id]){
             setAttendance(guest.attendance?.[club_id]?.[event.id]);
-            console.log('guest attendance')
-            console.log(guest.attendance?.[club_id]?.[event.id])
-            console.log("\n")
 
             let guestStatus = guest?.attendance?.[club_id]?.[event.id];
             if (Array.isArray(guestStatus)) {
@@ -56,8 +53,6 @@ const EventPost = ({ event, index, currentUser, pastEvent, onChange, admin, onDa
 
     React.useEffect(() => {
         if (guest.guestMode && guest.attendance?.[club_id]?.[event.id]) {
-            console.log(guest.attendance?.[club_id]?.[event.id])
-            console.log('guest attendance')
             setAttendance(guest.attendance?.[club_id]?.[event.id]);
 
             let guestStatus = guest?.attendance?.[club_id]?.[event.id];
@@ -78,6 +73,7 @@ const EventPost = ({ event, index, currentUser, pastEvent, onChange, admin, onDa
     };
 
     const handleAttendanceStatusChange = (updatedStatus) => {
+        console.log(updatedStatus)
         setStatus(updatedStatus);
         if(user.loggedIn){
             if (status) {
@@ -92,9 +88,6 @@ const EventPost = ({ event, index, currentUser, pastEvent, onChange, admin, onDa
         ));
         setAttendance(updatedAttendance);
     };
-
-    console.log('helo')
-    console.log(attendance)
 
     return (
         <EventCard>

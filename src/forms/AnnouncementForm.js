@@ -141,6 +141,7 @@ const AnnouncementForm = (props) => {
             data.guest = true;
             data.id = props.guest.announcementId;
             data.body = data.content;
+            data.name = props.clubTitle;
             dispatch(guestAddAnnouncement(parseInt(props.clubID,10), data));
         } else {
             callApiPostAnnouncement(data)

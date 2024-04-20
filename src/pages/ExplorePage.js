@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { styled } from "@mui/system";
 import { Grid } from "@mui/material";
-import { useUser } from '../authentication/context';
 
 import ClubCard from "../components/ExplorePage/ClubCard";
 import ClubDropdown from "../components/ExplorePage/ClubDropdown";

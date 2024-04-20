@@ -52,7 +52,7 @@ const AddAnnouncementGrid = styled(Grid)({
     flex: 1
 });
 
-const Announcements = () => {
+const Announcements = ({ clubTitle }) => {
     const guest = useSelector((state) => state.guest);
     const user = useSelector((state) => state.user.uid);
     const { clubID } = useParams();
@@ -88,7 +88,8 @@ const Announcements = () => {
     };
 
     useEffect(() => {
-        setAnnouncements(guest.announcements[clubID]);
+        let sorted = guest.announcements[clubID].sort((a, b) => b.time_posted.localeCompare(a.time_posted));
+        setAnnouncements(sorted);
     }, [guest.announcements[clubID]]);
 
     if (loading === true) {
@@ -124,7 +125,7 @@ const Announcements = () => {
                 </NoAnnouncementWrapper>
                 }
                 <AddAnnouncementGrid>
-                    {admin && <AnnouncementForm guest={guest} clubID={clubID} onSubmit={getAnnouncements} />}
+                    {admin && <AnnouncementForm clubTitle={clubTitle} guest={guest} clubID={clubID} onSubmit={getAnnouncements} />}
                 </AddAnnouncementGrid>
             </Grid>
         </Wrapper>

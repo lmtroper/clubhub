@@ -1,23 +1,24 @@
 let mysql = require('mysql');
-let config = require('./config.js');
+require('dotenv').config();
 
-// module.exports = config;
-// let config = require('./database.js');
+let config = {
+    host    : process.env.REACT_APP_DB_HOST,
+    user    : process.env.REACT_APP_DB_USER,
+    password: process.env.REACT_APP_DB_PASSWORD,
+    database: process.env.REACT_APP_DB_DATABASE
+};
+
 const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
-
 var admin = require("firebase-admin");
-
 var serviceAccount = require("./serviceAccountKey.json");
-const { start } = require('repl');
 
 admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount)
 });
 
 const app = express();
-
 
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
@@ -27,7 +28,6 @@ app.use(express.static(path.join(__dirname, "src/build")));
 // Allow localhost to make calls to API
 app.use((req, res, next) => {
 	if (req.headers.origin?.includes('://localhost:')) {
-		// console.log('Accepted')
 		res.header('Access-Control-Allow-Origin', req.headers.origin)
 		res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
 		res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");

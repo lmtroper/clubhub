@@ -11,7 +11,7 @@ export const teal = "#009688";
 export const timestamp = () => {
     let today = new Date();
     const leadingZero = (n) => {
-        if (n.toString.length == 1){
+        if (n.toString.length === 1){
             n = '0' + n;
             return n;
         }

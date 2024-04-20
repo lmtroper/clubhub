@@ -120,11 +120,11 @@ const guestModeReducer = (state = initialState, action) => {
       
         return {
           ...state,
-          events: {
-            ...state.events,
+          upcomingEvents: {
+            ...state.upcomingEvents,
             [action.clubID]: [
-              ...(state.events[action.clubID] || []),
-              ...newPayloadEvent
+              ...(state.upcomingEvents[action.clubID] || []),
+              ...newPayloadEvent,
             ]
           },
           eventCount: state.eventCount + 1,

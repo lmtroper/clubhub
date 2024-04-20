@@ -93,7 +93,7 @@ const AllDayLabel = styled(FormControlLabel)({
 })
 
 
-const EventForm = ({guest, close, clubID, onChange}) => {
+const EventForm = ({clubTitle, guest, close, clubID, onChange}) => {
     const dispatch = useDispatch();
     const [characterCountDisplay, setCharacterCountDisplay] = React.useState(310);
     const [title, setTitle] = React.useState('');
@@ -285,8 +285,9 @@ const EventForm = ({guest, close, clubID, onChange}) => {
             if(guest.guestMode){
                 let data = {
                     id: guest.eventId,
-                    club_id: clubID, 
+                    clubID: parseInt(clubID,10), 
                     title: title,
+                    name: clubTitle,
                     body: description,
                     start_time: startDate + ' ' + start_time,
                     end_time: endDateTime,
