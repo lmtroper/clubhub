@@ -1,9 +1,9 @@
-let mysql = require('mysql');
+let mysql = require('mysql2');
 require('dotenv').config();
 
 let config = {
     host    : process.env.REACT_APP_DB_HOST,
-	port    : process.env.REACT_APP_PORT,
+	port    : process.env.REACT_APP_DB_PORT,
     user    : process.env.REACT_APP_DB_USER,
     password: process.env.REACT_APP_DB_PASSWORD,
     database: process.env.REACT_APP_DB_DATABASE
@@ -32,7 +32,7 @@ app.use(express.static(path.join(__dirname, "src/build")));
 
 // Allow localhost to make calls to API
 app.use((req, res, next) => {
-	if (req.headers.origin?.includes('://localhost:3000')) {
+	if (req.headers.origin?.includes('://clubhub.lmtroper.dev')) {
 		res.header('Access-Control-Allow-Origin', req.headers.origin)
 		res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
 		res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
@@ -917,7 +917,7 @@ app.post('/api/logGuestVisit', (req,res) => {
 
 
 
-const port = process.env.REACT_APP_PORT; // Change this to an available port
+const port = 3001;
 app.listen(port, () => {
 	console.log(`Server is running on port ${port}`);
 });
