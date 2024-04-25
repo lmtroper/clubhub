@@ -73,7 +73,7 @@ const ClubBoardPage = () => {
     const callApiGetClubs = async () => {
         const url = serverURL + '/api/getClubs';
         const response = await fetch(url, {
-            method: "POST",
+            method: "GET",
             headers: {
                 "Content-Type": "application/json",
                 //authorization: `Bearer ${this.state.token}`
