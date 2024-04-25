@@ -24,7 +24,6 @@ admin.initializeApp({
 
 app.use(bodyParser.json());
 
-// Allow localhost to make calls to API
 app.use((req, res, next) => {
 	if (req.headers.origin?.includes('://clubhub.lmtroper.dev')) {
 		res.header('Access-Control-Allow-Origin', req.headers.origin)

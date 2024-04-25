@@ -59,7 +59,7 @@ const ExplorePage = () => {
     try {
       if (guest.guestMode) {
         setListOfClubs(guest.clubMemberships);
-      } else {
+      } else if (user) {
         fetchClubMemberships(user).then((parsed) => {
           setListOfClubs(parsed);
         });
