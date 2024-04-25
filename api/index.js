@@ -31,7 +31,7 @@ app.use(express.static(path.join(__dirname, "src/build")));
 
 // Allow localhost to make calls to API
 app.use((req, res, next) => {
-	if (req.headers.origin?.includes('://localhost:')) {
+	if (req.headers.origin?.includes('://clubhub.lmtroper.dev')) {
 		res.header('Access-Control-Allow-Origin', req.headers.origin)
 		res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
 		res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
