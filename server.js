@@ -1,8 +1,7 @@
 let mysql = require('mysql2');
 const express = require("express");
-const path = require("path");
 const bodyParser = require("body-parser");
-
+require('dotenv').config();
 const app = express();
 
 let config = {
@@ -13,23 +12,21 @@ let config = {
     database: process.env.REACT_APP_DB_DATABASE
 };
 
-console.log(config)
-
 var admin = require("firebase-admin");
 
-var serviceAccount = require("./serviceAccountKey.json");
+const serviceAccount = JSON.parse(
+	process.env.REACT_APP_FIREBASE
+);
 
 admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount)
 });
 
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-app.use(express.static(path.join(__dirname, "src/build")));
+app.use(bodyParser.json());
 
 // Allow localhost to make calls to API
 app.use((req, res, next) => {
-	if (req.headers.origin?.includes('://localhost:')) {
+	if (req.headers.origin?.includes('://clubhub.lmtroper.dev')) {
 		res.header('Access-Control-Allow-Origin', req.headers.origin)
 		res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
 		res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
@@ -38,8 +35,6 @@ app.use((req, res, next) => {
 })
 
 app.use(decodeIDToken);
-// Middleware to decode Bearer Token 
-// If logged in, Firebase user added to req['currentUser']
 async function decodeIDToken(req, res, next) {
 	if (req.headers?.authorization?.startsWith('Bearer ')) {
 		const idToken = req.headers.authorization.split('Bearer ')[1];
@@ -91,7 +86,7 @@ app.put('/api/login', (req, res) => {
 }
 )
 
-app.post('/api/getClubs', (req, res) => {
+app.get('/api/getClubs', (req, res) => {
 	let connection = mysql.createConnection(config)
 	let clubID = req.body.clubID
 
@@ -111,7 +106,7 @@ app.post('/api/getClubs', (req, res) => {
 	connection.end();
 });
 
-app.post('/api/getClubAnnouncements', (req,res) => {
+app.get('/api/getClubAnnouncements', (req,res) => {
 
 	let connection = mysql.createConnection(config);
 	let clubID = req.body.clubID;
@@ -135,7 +130,7 @@ app.post('/api/getClubAnnouncements', (req,res) => {
 
 });
 
-app.post('/api/getSpecificClubAnnouncements', (req,res) => {
+app.get('/api/getSpecificClubAnnouncements', (req,res) => {
 
 	let connection = mysql.createConnection(config);
 	let clubs = req.body.clubs;
@@ -240,7 +235,7 @@ app.post('/api/editAnnouncement', (req, res) => {
 
 })
 
-app.post('/api/getClubMembers', (req,res) => {
+app.get('/api/getClubMembers', (req,res) => {
 
 	let connection = mysql.createConnection(config);
 	let clubID = req.body.clubID;
@@ -263,7 +258,7 @@ app.post('/api/getClubMembers', (req,res) => {
 
 });
 
-app.post('/api/getCurrentUserRole', (req,res) => {
+app.get('/api/getCurrentUserRole', (req,res) => {
 	let connection = mysql.createConnection(config);
 	let userID = req.body.userID;
 	let clubID = req.body.clubID;
@@ -389,59 +384,11 @@ app.post("/api/acceptUser", async (req, res) => {
 	});
 	connection.end();
   })};
-  app.get("/api/getApplicationType/:clubID", async (req, res) => {
-	const currentUser = req["currentUser"];
-	const clubID = req.params["clubID"];
 
-	// Check if is admin/owner of this club
-	const admin = await isAdmin(currentUser, clubID);
-	if (!admin.status) {
-	  return res.status(400).send(admin.message);
-	}
-  
-	const type = await getApplicationType(clubID);
-	if (!type.status) {
-	  return res.status(400).send(type.message);
-	}
-	const acceptAll = !type.data["hold_applications"];
-	return res.status(200).json({acceptAll: acceptAll});
-  });
-  
-  app.put("/api/changeApplicationType", async (req, res) => {
-	const currentUser = req["currentUser"];
-	const clubID = req.body["clubID"];
-	const newType = !req.body["applicationType"];
-  
-	// Check if is admin/owner of this club
-	const admin = await isAdmin(currentUser, clubID);
-	if (!admin.status) {
-	  return res.status(400).send(admin.message);
-	}
-  
-	let connection = mysql.createConnection(config);
-	// change application type for this club
-	const query = `
-	UPDATE clubs
-	SET hold_applications=?
-	WHERE id=?`;
-	
-	const data = [newType, clubID];
-	
-	connection.query(query, data, (error, results) => {
-	  if (error) {
-		// Return an error if the query failed
-		res.status(500).send(error.message);
-	  } else {
-		// Return a success message
-		res.status(200).send("Application type changed to " + (newType ? "Hold Applications" : "Accept All"));
-	  }
-	});
-	connection.end();
-  });
 
-app.post('/api/getAllClubs', (req, res) => {
-	// Query all clubs from the clubs table
+app.get('/api/getAllClubs', (req, res) => {
 	let connection = mysql.createConnection(config)
+	console.log(connection)
 	const query = `SELECT * FROM clubs`;
 
 	connection.query(query, (error, results, fields) => {
@@ -459,7 +406,7 @@ app.post('/api/getAllClubs', (req, res) => {
 	connection.end();
 });
 
-app.post('/api/checkMembership', (req,res) => {
+app.get('/api/checkMembership', (req,res) => {
 
 	let connection = mysql.createConnection(config);
 	// let clubID = req.body.clubID;
@@ -480,43 +427,6 @@ app.post('/api/checkMembership', (req,res) => {
 
 
 });
-
-async function getApplicationType(clubID) {
-	let connection = mysql.createConnection(config);
-	return new Promise((resolve, reject) => {
-	  let response = { status: false, message: "Unknown error" };
-	  if (!clubID) {
-		response = { status: false, message: "No club ID provided" };
-		resolve(response);
-	  }
-	  // Check if user is an admin or owner of the club
-	  const adminQuery = `
-		SELECT hold_applications
-		FROM clubs
-		WHERE id=?
-		`;
-	  connection.query(adminQuery, [clubID], (error, results) => {
-		if (error) {
-		  console.error(error.message);
-		  response = { status: false, message: error.message };
-		}
-		if (!results?.length > 0) {
-		  response = {
-			status: false,
-			message: "No club found",
-		  };
-		} else {
-		  response = {
-			status: true,
-			message: "Club found",
-			data: results[0],
-		  };
-		}
-		resolve(response);
-	  });
-	  connection.end();
-	}
-)};
 
 app.post('/api/joinClub', async (req,res) => {
 	let data = req.body;
@@ -572,7 +482,8 @@ app.post('/api/editClubDescription', (req, res) => {
 	});
 	connection.end();
 });
-app.post('/api/getMyClubs', (req,res) => {
+
+app.get('/api/getMyClubs', (req,res) => {
 
 	let connection = mysql.createConnection(config);
 
@@ -597,8 +508,7 @@ app.post('/api/getMyClubs', (req,res) => {
 	connection.end();
 });
 
-app.post('/api/getAnnouncements', (req,res) => {
-
+app.get('/api/getAnnouncements', (req,res) => {
 	let connection = mysql.createConnection(config);
 	let userID = req.body.userID;
 
@@ -621,8 +531,7 @@ app.post('/api/getAnnouncements', (req,res) => {
 	connection.end();
 });
 
-app.post('/api/getDashboardEvents', (req,res) => {
-
+app.get('/api/getDashboardEvents', (req,res) => {
 	let connection = mysql.createConnection(config);
 	// let clubID = req.body.clubID;
 	let userID = req.body.userID;
@@ -647,7 +556,7 @@ app.post('/api/getDashboardEvents', (req,res) => {
 	connection.end();
 });
 
-app.post('/api/getDashboardEvents', (req,res) => {
+app.get('/api/getDashboardEvents', (req,res) => {
 
 	let connection = mysql.createConnection(config);
 	// let clubID = req.body.clubID;
@@ -687,7 +596,7 @@ app.post('/api/leaveClub', (req,res) => {
 	connection.end();
 });
 
-app.post('/api/getPastEvents', (req,res) => {
+app.get('/api/getPastEvents', (req,res) => {
 	let connection = mysql.createConnection(config);
 	let clubID = req.body.clubID;
 	let todaysDate = req.body.todaysDate;
@@ -704,7 +613,7 @@ app.post('/api/getPastEvents', (req,res) => {
 
 })
 
-app.post('/api/getUpcomingEvents', (req,res) => {
+app.get('/api/getUpcomingEvents', (req,res) => {
 	let connection = mysql.createConnection(config);
 	let clubID = req.body.clubID;
 	let todaysDate = req.body.todaysDate;
@@ -767,7 +676,7 @@ app.post('/api/deleteEvent', (req,res) => {
 	});
 })
 
-app.post('/api/getAttendance', (req, res) => {
+app.get('/api/getAttendance', (req, res) => {
 	let connection = mysql.createConnection(config);
 	let eventID = req.body.eventID;
 
@@ -915,5 +824,7 @@ const port = process.env.REACT_APP_SERVER_PORT || 3001;
 app.listen(port, () => {
 	console.log(`Server is running on port ${port}`);
 });
+
+app.get("/", (req, res) => res.send("Express on Vercel"));
 
 module.exports = app;
