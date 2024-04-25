@@ -86,7 +86,7 @@ app.put('/api/login', (req, res) => {
 }
 )
 
-app.get('/api/getClubs', (req, res) => {
+app.post('/api/getClubs', (req, res) => {
 	let connection = mysql.createConnection(config)
 	let clubID = req.body.clubID
 
@@ -106,7 +106,7 @@ app.get('/api/getClubs', (req, res) => {
 	connection.end();
 });
 
-app.get('/api/getClubAnnouncements', (req,res) => {
+app.post('/api/getClubAnnouncements', (req,res) => {
 
 	let connection = mysql.createConnection(config);
 	let clubID = req.body.clubID;
@@ -130,7 +130,7 @@ app.get('/api/getClubAnnouncements', (req,res) => {
 
 });
 
-app.get('/api/getSpecificClubAnnouncements', (req,res) => {
+app.post('/api/getSpecificClubAnnouncements', (req,res) => {
 
 	let connection = mysql.createConnection(config);
 	let clubs = req.body.clubs;
@@ -235,7 +235,7 @@ app.post('/api/editAnnouncement', (req, res) => {
 
 })
 
-app.get('/api/getClubMembers', (req,res) => {
+app.post('/api/getClubMembers', (req,res) => {
 
 	let connection = mysql.createConnection(config);
 	let clubID = req.body.clubID;
@@ -258,7 +258,7 @@ app.get('/api/getClubMembers', (req,res) => {
 
 });
 
-app.get('/api/getCurrentUserRole', (req,res) => {
+app.post('/api/getCurrentUserRole', (req,res) => {
 	let connection = mysql.createConnection(config);
 	let userID = req.body.userID;
 	let clubID = req.body.clubID;
@@ -406,7 +406,7 @@ app.get('/api/getAllClubs', (req, res) => {
 	connection.end();
 });
 
-app.get('/api/checkMembership', (req,res) => {
+app.post('/api/checkMembership', (req,res) => {
 
 	let connection = mysql.createConnection(config);
 	// let clubID = req.body.clubID;
@@ -483,7 +483,7 @@ app.post('/api/editClubDescription', (req, res) => {
 	connection.end();
 });
 
-app.get('/api/getMyClubs', (req,res) => {
+app.post('/api/getMyClubs', (req,res) => {
 
 	let connection = mysql.createConnection(config);
 
@@ -508,7 +508,7 @@ app.get('/api/getMyClubs', (req,res) => {
 	connection.end();
 });
 
-app.get('/api/getAnnouncements', (req,res) => {
+app.post('/api/getAnnouncements', (req,res) => {
 	let connection = mysql.createConnection(config);
 	let userID = req.body.userID;
 
@@ -531,7 +531,7 @@ app.get('/api/getAnnouncements', (req,res) => {
 	connection.end();
 });
 
-app.get('/api/getDashboardEvents', (req,res) => {
+app.post('/api/getDashboardEvents', (req,res) => {
 	let connection = mysql.createConnection(config);
 	// let clubID = req.body.clubID;
 	let userID = req.body.userID;
@@ -556,7 +556,7 @@ app.get('/api/getDashboardEvents', (req,res) => {
 	connection.end();
 });
 
-app.get('/api/getDashboardEvents', (req,res) => {
+app.post('/api/getDashboardEvents', (req,res) => {
 
 	let connection = mysql.createConnection(config);
 	// let clubID = req.body.clubID;
@@ -596,7 +596,7 @@ app.post('/api/leaveClub', (req,res) => {
 	connection.end();
 });
 
-app.get('/api/getPastEvents', (req,res) => {
+app.post('/api/getPastEvents', (req,res) => {
 	let connection = mysql.createConnection(config);
 	let clubID = req.body.clubID;
 	let todaysDate = req.body.todaysDate;
@@ -613,7 +613,7 @@ app.get('/api/getPastEvents', (req,res) => {
 
 })
 
-app.get('/api/getUpcomingEvents', (req,res) => {
+app.post('/api/getUpcomingEvents', (req,res) => {
 	let connection = mysql.createConnection(config);
 	let clubID = req.body.clubID;
 	let todaysDate = req.body.todaysDate;
@@ -676,7 +676,7 @@ app.post('/api/deleteEvent', (req,res) => {
 	});
 })
 
-app.get('/api/getAttendance', (req, res) => {
+app.post('/api/getAttendance', (req, res) => {
 	let connection = mysql.createConnection(config);
 	let eventID = req.body.eventID;
 

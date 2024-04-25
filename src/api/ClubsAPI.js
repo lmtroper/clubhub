@@ -30,7 +30,7 @@ export const fetchAllClubs = (setClubs, setFilteredClubs) => {
 const getClubMemberships = async (userID) => {
   const url = serverURL + '/api/checkMembership';
   const response = await fetch(url, {
-    method: "GET",
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
@@ -63,7 +63,7 @@ export const fetchMyClubs = async (user) => {
 const callApiGetMyClubs = async (user) => {
   const url = serverURL + '/api/getMyClubs';
   const response = await fetch(url, {
-    method: "GET",
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
       //authorization: `Bearer ${this.state.token}`
@@ -89,7 +89,7 @@ export const fetchClubMembers = (clubID) => {
 const callApiGetClubMembers = async (clubID) => {
   const url = serverURL + '/api/getClubMembers';
   const response = await fetch(url, {
-      method: "GET",
+      method: "POST",
       headers: {
           "Content-Type": "application/json",
           //authorization: `Bearer ${this.state.token}`
@@ -120,7 +120,7 @@ export const fetchUserClubRole = async (clubID, userID) => {
 const callApiGetUserRole = async (clubID, userID) => {
   const url = serverURL + '/api/getCurrentUserRole';
   const response = await fetch(url, {
-      method: "GET",
+      method: "POST",
       headers: {
           "Content-Type": "application/json",
           //authorization: `Bearer ${this.state.token}`
@@ -165,7 +165,7 @@ export const fetchClubDetails = async (clubID) => {
 const callApiGetClubDetails = async (clubID) => {
   const url = serverURL + '/api/getClubs';
   const response = await fetch(url, {
-      method: "GET",
+      method: "POST",
       headers: {
           "Content-Type": "application/json",
           //authorization: `Bearer ${this.state.token}`

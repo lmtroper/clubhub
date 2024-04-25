@@ -141,7 +141,7 @@ const Members = ({ name, onChange }) => {
     const callApiGetClubMembers = async () => {
         const url = serverURL + '/api/getClubMembers';
         const response = await fetch(url, {
-            method: "GET",
+            method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 //authorization: `Bearer ${this.state.token}`
