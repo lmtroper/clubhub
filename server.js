@@ -1,5 +1,9 @@
 let mysql = require('mysql2');
-require('dotenv').config();
+const express = require("express");
+const path = require("path");
+const bodyParser = require("body-parser");
+
+const app = express();
 
 let config = {
     host    : process.env.REACT_APP_DB_HOST,
@@ -9,30 +13,23 @@ let config = {
     database: process.env.REACT_APP_DB_DATABASE
 };
 
-const express = require("express");
-const path = require("path");
-const bodyParser = require("body-parser");
+console.log(config)
 
 var admin = require("firebase-admin");
 
 var serviceAccount = require("./serviceAccountKey.json");
-const { start } = require('repl');
 
 admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount)
 });
 
-const app = express();
-
-
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.static(path.join(__dirname, "src/build")));
 
-
 // Allow localhost to make calls to API
 app.use((req, res, next) => {
-	if (req.headers.origin?.includes('://clubhub.lmtroper.dev')) {
+	if (req.headers.origin?.includes('://localhost:')) {
 		res.header('Access-Control-Allow-Origin', req.headers.origin)
 		res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
 		res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
@@ -444,7 +441,6 @@ app.post("/api/acceptUser", async (req, res) => {
 
 app.post('/api/getAllClubs', (req, res) => {
 	// Query all clubs from the clubs table
-
 	let connection = mysql.createConnection(config)
 	const query = `SELECT * FROM clubs`;
 
@@ -915,9 +911,9 @@ app.post('/api/logGuestVisit', (req,res) => {
 	connection.end();
 });
 
-
-
 const port = process.env.REACT_APP_SERVER_PORT || 3001;
 app.listen(port, () => {
 	console.log(`Server is running on port ${port}`);
 });
+
+module.exports = app;
