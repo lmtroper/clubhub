@@ -9,7 +9,8 @@ import PaginationControls from "../components/ExplorePage/PaginationControls";
 
 import { fetchAllClubs, fetchClubMemberships } from "../api/ClubsAPI";
 import { intersectArrays, unionArrays } from '../utils';
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { clubsList } from "global/actions";
 
 const Wrapper = styled('div')({
     maxWidth: 800,
@@ -29,10 +30,17 @@ const StyledList = styled('ul')({
 });
 
 const ExplorePage = () => {
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user.uid);
   const guest = useSelector((state) => state.guest);
+  const loadedClubs = useSelector((state) => state.clubs);
+  
   // Club Data
   const [clubs, setClubs] = useState([]);
+
+  // Applied filters
+  const [searchFilter, setSearchFilter] = useState(false);
+  const [categoryFilter, setCategoryFilter] = useState(false);
 
   // Filtered Club Data
   const [filteredClubs, setFilteredClubs] = useState([]);
@@ -47,9 +55,29 @@ const ExplorePage = () => {
   const [listOfClubs, setListOfClubs] = React.useState([]);
 
   useEffect(() => {
-    fetchAllClubs(setClubs, setFilteredClubs);
+    // Method to fetch all clubs from DB
+    const getClubsList = async () => {
+      await fetchAllClubs().then((parsed) => {
+        setClubs(parsed);
+        setFilteredClubs(parsed);
+        // setClubsByCategory(parsed);
+        // setClubsBySearch(parsed);
+        dispatch(clubsList(parsed));
+      });
+    };
+
+    // Checks if clubs are stored in Redux, if not fetches from DB
+    if (loadedClubs.clubs.length !== 0) {
+      setClubs(loadedClubs.clubs);
+      setFilteredClubs(loadedClubs.clubs);
+      // setClubsByCategory(loadedClubs.clubs);
+      // setClubsBySearch(loadedClubs.clubs);
+    } else {
+      getClubsList();
+    }
     handleClubMemberships(user);
   }, []);
+
 
   useEffect(() => {
     handleClubMemberships(user);
@@ -59,7 +87,7 @@ const ExplorePage = () => {
     try {
       if (guest.guestMode) {
         setListOfClubs(guest.clubMemberships);
-      } else if (user) {
+      } else {
         fetchClubMemberships(user).then((parsed) => {
           setListOfClubs(parsed);
         });
@@ -69,20 +97,27 @@ const ExplorePage = () => {
     }
   };
 
+  // UseEffect to filter clubs by category and search
   useEffect(() => {
-    if (clubsByCategory.length !== 0 && clubsBySearch.length !== 0) {
+    // If both filters are empty, display all clubs
+    if (categoryFilter && searchFilter) {
+      console.log('in2')
+      console.log(clubsByCategory, clubsBySearch)
       setFilteredClubs(intersectArrays(clubsByCategory, clubsBySearch));
-    } else {
-      setFilteredClubs(unionArrays(clubsByCategory, clubsBySearch));
-    };
+    } else if (categoryFilter) {
+      setFilteredClubs(clubsByCategory);
+    } else if (searchFilter) {
+      console.log('applied search filter!')
+      setFilteredClubs(clubsBySearch);
+    }
     setCurrentPage(1);
   }, [clubsByCategory, clubsBySearch]);
 
   return (
     <Wrapper>
       <FilterHeader container>
-        <ClubDropdown clubs={clubs} setFilteredClubs={setClubsByCategory} />
-        <ClubSearchField clubs={clubs} setFilteredClubs={setClubsBySearch} />
+        <ClubDropdown appliedFilter={setCategoryFilter} clubs={clubs} setFilteredClubs={setClubsByCategory} />
+        <ClubSearchField appliedFilter={setSearchFilter} clubs={clubs} setFilteredClubs={setClubsBySearch} />
       </FilterHeader>
       <StyledGrid container>
         <StyledList>

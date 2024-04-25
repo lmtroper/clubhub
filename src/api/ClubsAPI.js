@@ -17,15 +17,18 @@ const callApiGetAllClubs = async () => {
   }
 };
 
-export const fetchAllClubs = (setClubs, setFilteredClubs) => {
-  callApiGetAllClubs()
+export const fetchAllClubs = async () => {
+  return callApiGetAllClubs()
     .then(res => {
       var parsed = JSON.parse(res.express);
-      setClubs(parsed);
-      setFilteredClubs(parsed);
       return parsed;
     })
+    .catch(error => {
+      console.error('Error fetching clubs:', error);
+      throw error; // Re-throw the error to propagate it to the caller
+    });
 }
+
 
 const getClubMemberships = async (userID) => {
   const url = serverURL + '/api/checkMembership';

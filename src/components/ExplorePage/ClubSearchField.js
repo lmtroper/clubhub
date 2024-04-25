@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled } from "@mui/system";
 import { Grid, TextField } from "@mui/material";
 
@@ -13,7 +13,14 @@ const Search = styled(TextField)({
     alignItems: "center",
 });
 
-const ClubSearchField = ({ clubs, setFilteredClubs }) => {
+/**
+ * Search field component to filter clubs by name
+ * 
+ * @param {Object} appliedFilter - Flag used to determine whether a search filter is set.
+ * @param {Array} clubs - Array of club objects.
+ * @param {Function} setFilteredClubs - Function to set the filtered clubs.
+ */
+const ClubSearchField = ({ appliedFilter, clubs, setFilteredClubs }) => {
     const [searchTerm, setSearchTerm] = useState("");
 
     const handleSearch = (event) => {
@@ -21,6 +28,13 @@ const ClubSearchField = ({ clubs, setFilteredClubs }) => {
         setSearchTerm(searchTerm);
         const filteredClubs = clubs.filter((club) => club.name.toLowerCase().includes(searchTerm.toLowerCase()));
         setFilteredClubs(filteredClubs);
+
+        // Set applied filter flag
+        if (searchTerm === "") {
+            appliedFilter(false);
+        } else {
+            appliedFilter(true);
+        }
     }
 
     return (

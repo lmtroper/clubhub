@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FormControl, Grid, InputLabel, MenuItem, Select } from "@mui/material";
 import { styled } from "@mui/system";
 
@@ -26,7 +26,13 @@ const categories = [
     { value: "12", label: "Religious and Spiritual", slug: "religious-and-spiritual" },
 ];
 
-const ClubDropdown = ({ clubs, setFilteredClubs }) => {
+/**
+ * Dropdown component to filter clubs by category
+ * @param {Object} appliedFilter - Flag used to determine whether a category filter is set.
+ * @param {Array} clubs - Array of club objects.
+ * @param {Function} setFilteredClubs - Function to set the filtered clubs.
+ */
+const ClubDropdown = ({ appliedFilter, clubs, setFilteredClubs }) => {
     const [categoryFilter, setCategoryFilter] = useState("1");
 
     const handleChange = (event) => {
@@ -35,7 +41,10 @@ const ClubDropdown = ({ clubs, setFilteredClubs }) => {
         const category = categories.find((c) => c.value === event.target.value);
         if(category === "All") {
             setFilteredClubs([]);
+            appliedFilter(false);
             return;
+        } else {
+            appliedFilter(true);
         }
         const filteredClubs = clubs.filter((club) => club.categories.includes(category.slug));
         setFilteredClubs(filteredClubs);

@@ -10,6 +10,7 @@ export const GUEST_DELETE_ANNOUNCEMENT = 'GUEST_DELETE_ANNOUNCEMENT';
 export const GUEST_ADD_EVENT = 'GUEST_ADD_EVENT';
 export const GUEST_DELETE_EVENT = 'GUEST_DELETE_EVENT';
 export const GUEST_UPDATE_ATTENDANCE = 'GUEST_UPDATE_ATTENDANCE';
+export const SET_CLUBS_LIST = 'SET_CLUBS_LIST';
 
 /**
  * User actions
@@ -107,5 +108,12 @@ export const guestUpdateAttendance = (clubID, eventID, attendance) => {
     clubID: clubID,
     eventID: eventID,
     status: attendance, // going, not going, maybe
+  }
+}
+
+export const clubsList = (clubs) => {
+  return {
+    type: SET_CLUBS_LIST,
+    clubs: clubs
   }
 }
