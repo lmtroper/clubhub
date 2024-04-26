@@ -88,8 +88,10 @@ const Announcements = ({ clubTitle }) => {
     };
 
     useEffect(() => {
-        let sorted = guest.announcements[clubID].sort((a, b) => b.time_posted.localeCompare(a.time_posted));
-        setAnnouncements(sorted);
+        if (guest.guestMode){
+            let sorted = guest.announcements[clubID].sort((a, b) => b.time_posted.localeCompare(a.time_posted));
+            setAnnouncements(sorted);
+        }
     }, [guest.announcements[clubID]]);
 
     if (loading === true) {

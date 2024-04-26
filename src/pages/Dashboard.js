@@ -24,13 +24,14 @@ const Dashboard = () => {
   const [events, setEvents] = React.useState([]);
 
   const [selectedClubAnnouncements, setSelectedClubAnnouncements] = React.useState([])
-  const [selectedClubEvents, setSelectedClubEvents] = React.useState([])
+  const [selectedClubEvents, setSelectedClubEvents] = React.useState(false)
 
   useEffect(() => {
     if (loggedIn) {
       fetchAnnouncements(user).then((announcements) => {setAnnouncements(announcements)});
       fetchMyClubs(user)
       .then((clubs) => {
+        console.log('dashboard clubs', clubs)
         const userClubs = clubs.map((club) => club.name);
         setUserClubs(userClubs);
       });

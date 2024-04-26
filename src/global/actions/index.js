@@ -1,5 +1,6 @@
 export const SET_USER = 'SET_USER';
 export const SET_USER_CLUBS = 'SET_USER_CLUBS';
+export const SET_USER_CLUBS_MEMBERSHIPS = 'SET_USER_CLUBS_MEMBERSHIPS';
 export const SET_GUEST_MODE = 'SET_GUEST_MODE';
 export const SET_USER_ADMIN_CLUBS = 'SET_USER_ADMIN_CLUBS';
 export const ADD_GUEST_CLUBS = 'ADD_GUEST_CLUBS';
@@ -27,6 +28,13 @@ export const setUser = (loggedIn, uid, displayName) => {
 export const getUserClubs = (clubs) => {
   return {
     type: SET_USER_CLUBS,
+    payload: clubs
+  }
+}
+
+export const getUserClubMemberships = (clubs) => {
+  return {
+    type: SET_USER_CLUBS_MEMBERSHIPS,
     payload: clubs
   }
 }

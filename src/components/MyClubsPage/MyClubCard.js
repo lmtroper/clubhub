@@ -66,7 +66,7 @@ const MyClubCard = ({ user, guest, clubs, onChange }) => {
     const dispatch = useDispatch();
     
     const handleClick = (clubId, clubName) => {
-        if(guest) {
+        if(guest && guest.guestMode) {
            dispatch(removeGuestClubs(clubId));
         } else {
             let data = {
@@ -74,8 +74,9 @@ const MyClubCard = ({ user, guest, clubs, onChange }) => {
                 userId: user.uid,
                 clubName:clubName
             }
-            apiLeaveClub(data);
-            onChange();
+            apiLeaveClub(data).then(() => {
+                onChange();
+            });
         }
         setLeaveClubsModalOpen(false);
         

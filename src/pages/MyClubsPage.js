@@ -4,6 +4,8 @@ import { Grid, Typography } from "@mui/material";
 import MyClubCard from '../components/MyClubsPage/MyClubCard'
 import { fetchMyClubs } from "../api/ClubsAPI";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { getUserClubs } from "global/actions";
 
 const Wrapper = styled('div')({
     maxWidth: 800,
@@ -16,6 +18,7 @@ const Title = styled(Typography)({
 });
 
 const MyClubs = () => {
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const guest = useSelector((state) => state.guest);
   const [myClubs, setMyClubs] = useState([])
@@ -25,6 +28,9 @@ const MyClubs = () => {
     if(guest.guestMode) {
       setMyClubs(guest.clubs);
     } else {
+      if (user.clubs.length > 0) {
+        setMyClubs(user.clubs);
+      }
       onChange();
     };
   }, []);
@@ -32,7 +38,8 @@ const MyClubs = () => {
   useEffect(() => {
     if(guest.clubs.length === 0) {
       setMyClubsEmpty(true);
-    } else {
+    } else if (guest.guest) {
+      setMyClubsEmpty(false);
       setMyClubs(guest.clubs);
     }
   }, [guest.clubs]);
@@ -42,7 +49,9 @@ const MyClubs = () => {
       if (parsed.length === 0) {
         setMyClubsEmpty(true);
       } else {
+        setMyClubsEmpty(false);
         setMyClubs(parsed);
+        dispatch(getUserClubs(parsed));
       }
     });
   }

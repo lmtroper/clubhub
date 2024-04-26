@@ -80,20 +80,24 @@ const ClubCard = ({ club, isMember, guest, onJoin }) => {
     }
 
     const handleJoinClub = (clubID) => {
+        console.log(clubID, user)
         if (user) {
             setUnFulfilledJoin('');
             callApiJoinClub(user, clubID).then(()=>{
                 onJoin();
+                notify();
             });
         } else if (guest.guestMode) {
             fetchClubDetails(clubID).then((club) => {
                 dispatch(addGuestClubs(club.id, club));
             });
+            
         } else {
             logIn(clubID);
             setUnFulfilledJoin(clubID);
         }
     }
+
     useEffect(() => {
         if (unfufilledJoin) {
             handleJoinClub(unfufilledJoin);

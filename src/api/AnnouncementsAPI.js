@@ -20,7 +20,7 @@ export const fetchAnnouncements = async (user) => {
 const callApiGetAnnouncements = async (user) => {
   const url = serverURL + '/api/getAnnouncements';
   const response = await fetch(url, {
-    method: "GET",
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
       //authorization: `Bearer ${this.state.token}`
@@ -54,7 +54,7 @@ export const fetchSpecificClubAnnouncements = async (clubs) => {
 const callApiGetSpecificClubAnnouncements = async (clubs) => {
   const url = serverURL + '/api/getSpecificClubAnnouncements';
   const response = await fetch(url, {
-    method: "GET",
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
       //authorization: `Bearer ${this.state.token}`
@@ -88,7 +88,7 @@ export const fetchClubAnnouncements = async (clubID) => {
 const callApiGetClubAnnouncements = async (clubID) => {
   const url = serverURL + '/api/getClubAnnouncements';
   const response = await fetch(url, {
-    method: "GET",
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
       //authorization: `Bearer ${this.state.token}`

@@ -48,15 +48,15 @@ const getClubMemberships = async (userID) => {
 };
 
 export const fetchClubMemberships = async (user) => {
-  return getClubMemberships(user)
+  return await getClubMemberships(user)
     .then(res => {
         const parsed = JSON.parse(res.express);
         return parsed.map((club) => club.club_id);
-    })
+    });
 };
 
 export const fetchMyClubs = async (user) => {
-  return callApiGetMyClubs(user)
+  return await callApiGetMyClubs(user)
     .then(res => {
       var parsed = JSON.parse(res.express);
       return parsed;
@@ -215,7 +215,6 @@ export const callApiJoinClub = async (userID, clubID) => {
       method: "POST",
       headers: {
           "Content-Type": "application/json",
-          //authorization: `Bearer ${this.state.token}`
       },
       body: JSON.stringify({
           userID: userID,

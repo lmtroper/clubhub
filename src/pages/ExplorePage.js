@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { styled } from "@mui/system";
-import { Grid } from "@mui/material";
+import { Grid, CircularProgress } from "@mui/material";
 
 import ClubCard from "../components/ExplorePage/ClubCard";
 import ClubDropdown from "../components/ExplorePage/ClubDropdown";
@@ -8,9 +8,9 @@ import ClubSearchField from "../components/ExplorePage/ClubSearchField";
 import PaginationControls from "../components/ExplorePage/PaginationControls";
 
 import { fetchAllClubs, fetchClubMemberships } from "../api/ClubsAPI";
-import { intersectArrays, unionArrays } from '../utils';
+import { intersectArrays } from '../utils';
 import { useDispatch, useSelector } from "react-redux";
-import { clubsList } from "global/actions";
+import { clubsList, getUserClubMemberships } from "global/actions";
 
 const Wrapper = styled('div')({
     maxWidth: 800,
@@ -30,8 +30,11 @@ const StyledList = styled('ul')({
 });
 
 const ExplorePage = () => {
+  const [loading, setLoading] = React.useState(true);
+
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.uid);
+  const userClubs = useSelector((state) => state.user.memberships);
   const guest = useSelector((state) => state.guest);
   const loadedClubs = useSelector((state) => state.clubs);
   
@@ -60,9 +63,8 @@ const ExplorePage = () => {
       await fetchAllClubs().then((parsed) => {
         setClubs(parsed);
         setFilteredClubs(parsed);
-        // setClubsByCategory(parsed);
-        // setClubsBySearch(parsed);
         dispatch(clubsList(parsed));
+        setLoading(false);
       });
     };
 
@@ -70,6 +72,7 @@ const ExplorePage = () => {
     if (loadedClubs.clubs.length !== 0) {
       setClubs(loadedClubs.clubs);
       setFilteredClubs(loadedClubs.clubs);
+      setLoading(false);
       // setClubsByCategory(loadedClubs.clubs);
       // setClubsBySearch(loadedClubs.clubs);
     } else {
@@ -88,8 +91,12 @@ const ExplorePage = () => {
       if (guest.guestMode) {
         setListOfClubs(guest.clubMemberships);
       } else {
+        if (userClubs.length > 0) {
+          setListOfClubs(userClubs);
+        }
         fetchClubMemberships(user).then((parsed) => {
           setListOfClubs(parsed);
+          dispatch(getUserClubMemberships(parsed));
         });
       }
     } catch (error) {
@@ -101,13 +108,10 @@ const ExplorePage = () => {
   useEffect(() => {
     // If both filters are empty, display all clubs
     if (categoryFilter && searchFilter) {
-      console.log('in2')
-      console.log(clubsByCategory, clubsBySearch)
       setFilteredClubs(intersectArrays(clubsByCategory, clubsBySearch));
     } else if (categoryFilter) {
       setFilteredClubs(clubsByCategory);
     } else if (searchFilter) {
-      console.log('applied search filter!')
       setFilteredClubs(clubsBySearch);
     }
     setCurrentPage(1);
@@ -120,6 +124,10 @@ const ExplorePage = () => {
         <ClubSearchField appliedFilter={setSearchFilter} clubs={clubs} setFilteredClubs={setClubsBySearch} />
       </FilterHeader>
       <StyledGrid container>
+        {loading ? 
+          <div style={{display:"flex", justifyContent:"center", height:"100vh", marginTop:"100px"}}>
+            <CircularProgress />
+          </div> :
         <StyledList>
           {clubsToDisplay.map((club, key) => (
             <ClubCard 
@@ -129,7 +137,7 @@ const ExplorePage = () => {
               isMember={listOfClubs} 
               onJoin={()=>{handleClubMemberships(user)}}/>
           ))}
-        </StyledList>
+        </StyledList>}
       </StyledGrid>
       <PaginationControls currentPage={currentPage} setCurrentPage={setCurrentPage} clubs={filteredClubs} setClubsToDisplay={setClubsToDisplay} />
     </Wrapper>
