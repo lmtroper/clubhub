@@ -12,6 +12,9 @@ export const GUEST_ADD_EVENT = 'GUEST_ADD_EVENT';
 export const GUEST_DELETE_EVENT = 'GUEST_DELETE_EVENT';
 export const GUEST_UPDATE_ATTENDANCE = 'GUEST_UPDATE_ATTENDANCE';
 export const SET_CLUBS_LIST = 'SET_CLUBS_LIST';
+export const SET_CLUBS_DETAILS = 'SET_CLUBS_DETAILS';
+export const SET_CLUBS_ANNOUNCEMENTS = 'SET_CLUBS_ANNOUNCEMENTS';
+export const SET_CLUBS_EVENTS = 'SET_CLUBS_EVENTS';
 
 /**
  * User actions
@@ -125,3 +128,27 @@ export const clubsList = (clubs) => {
     clubs: clubs
   }
 }
+
+export const setClubsDetails = (details) => {
+  return {
+    type: SET_CLUBS_DETAILS,
+    payload: details
+  }
+}
+
+export const setClubsAnnouncements = (clubID, announcements) => {
+  return {
+    type: SET_CLUBS_ANNOUNCEMENTS,
+    clubID: clubID,
+    payload: announcements
+  }
+}
+
+export const setClubsEvents = (clubID, events) => {
+  return {
+    type: SET_CLUBS_EVENTS,
+    clubID: clubID,
+    payload: events
+  }
+}
+

@@ -3,9 +3,11 @@ import { useParams } from 'react-router-dom';
 import { styled } from "@mui/system"
 import { storage } from "../authentication/firebase";
 import { fetchClubDetails, fetchUserClubRole, editClubDescription } from "../api/ClubsAPI";
-import { Paper, Grid, ImageList, ImageListItem, TextField, Modal, Typography } from '@mui/material';
+import { Grid, ImageList, ImageListItem, Modal, Typography } from '@mui/material';
 import { ref, getDownloadURL, listAll } from "firebase/storage";
 import ClubDescriptionCard from '../components/ClubDescription/ClubDescriptionCard';
+import { useDispatch, useSelector } from 'react-redux';
+import { setClubsDetails } from 'global/actions';
 
 const Wrapper = styled(Grid)({
     maxWidth: 1500,
@@ -25,6 +27,8 @@ const Title = styled(Typography)({
 
 const ExploreClubDescription = () => {
     const { clubID } = useParams();
+    const loadedClubDescription = useSelector((state) => state.clubs.clubDetails[clubID]);
+
     const [clubTitle, setClubTitle] = React.useState("")
     const [clubDescription, setClubDescription] = React.useState("")
 
@@ -32,6 +36,10 @@ const ExploreClubDescription = () => {
     const [selectedImage, setSelectedImage] = React.useState(null)
 
     useEffect(() => {
+        if (loadedClubDescription){
+            setClubTitle(loadedClubDescription.name);
+            setClubDescription(loadedClubDescription.description);
+        }
         fetchClubDetails(clubID).then((club) => {
             setClubTitle(club.name);
             setClubDescription(club.description);

@@ -10,7 +10,7 @@ import PaginationControls from "../components/ExplorePage/PaginationControls";
 import { fetchAllClubs, fetchClubMemberships } from "../api/ClubsAPI";
 import { intersectArrays } from '../utils';
 import { useDispatch, useSelector } from "react-redux";
-import { clubsList, getUserClubMemberships } from "global/actions";
+import { clubsList, getUserClubMemberships, setClubsDetails } from "global/actions";
 
 const Wrapper = styled('div')({
     maxWidth: 800,
@@ -64,6 +64,7 @@ const ExplorePage = () => {
         setClubs(parsed);
         setFilteredClubs(parsed);
         dispatch(clubsList(parsed));
+
         setLoading(false);
       });
     };
@@ -73,8 +74,15 @@ const ExplorePage = () => {
       setClubs(loadedClubs.clubs);
       setFilteredClubs(loadedClubs.clubs);
       setLoading(false);
-      // setClubsByCategory(loadedClubs.clubs);
-      // setClubsBySearch(loadedClubs.clubs);
+
+      const clubDetails = {};
+      (loadedClubs.clubs).forEach(item => {
+        const id = item.id.toString();
+        clubDetails[id] = item;
+      });
+
+      dispatch(setClubsDetails(clubDetails));
+
     } else {
       getClubsList();
     }
