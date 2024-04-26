@@ -8,16 +8,20 @@ import DashboardEvents from "../components/Dashboard/DashboardEvents";
 import { fetchAnnouncements } from "../api/AnnouncementsAPI";
 import { fetchMyClubs } from "../api/ClubsAPI";
 import { fetchUserUpcomingEvents } from "../api/EventsAPI";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setDashboardClubs } from "global/actions";
 
 import { transformAnnouncements, transformEvents } from "guest_content";
 
 const Dashboard = () => {
+  const dispatch = useDispatch();
   const guest = useSelector((state) => state.guest);
   const [loading, setLoading] = React.useState(true);
 
   const user = useSelector((state) => state.user.uid);
   const loggedIn = useSelector((state) => state.user.loggedIn);
+  const dashboardClubs = useSelector((state) => state.user.dashboardClubs);
+
   const [userClubs, setUserClubs] = React.useState([]);
 
   const [announcements, setAnnouncements] = React.useState([]);
@@ -28,13 +32,18 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (loggedIn) {
+      if (dashboardClubs.length > 0) {
+        setUserClubs(dashboardClubs);
+      } else {
+        fetchMyClubs(user)
+        .then((clubs) => {
+          const userClubs = clubs.map((club) => club.name);
+          setUserClubs(userClubs);
+          dispatch(setDashboardClubs(userClubs));
+        });
+      }
+      
       fetchAnnouncements(user).then((announcements) => {setAnnouncements(announcements)});
-      fetchMyClubs(user)
-      .then((clubs) => {
-        console.log('dashboard clubs', clubs)
-        const userClubs = clubs.map((club) => club.name);
-        setUserClubs(userClubs);
-      });
       fetchUserUpcomingEvents(user)
       .then((upcomingEvents) => {
         setEvents(upcomingEvents);

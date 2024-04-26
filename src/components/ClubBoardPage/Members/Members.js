@@ -8,7 +8,8 @@ import TransferOwnership from '../../../modals/TransferOwner';
 import { useParams } from 'react-router-dom';
 import { serverURL } from '../../../constants/config';
 import { useNavigate } from 'react-router';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setClubMembers } from 'global/actions';
 
 const Wrapper = styled(Grid)({
     display: 'flex',
@@ -72,19 +73,13 @@ const AdminBtn = styled(Button)({
     marginBottom: '10px'
 })
 
-const Members = ({ name, onChange }) => {
+const Members = ({ members, getClubMembers }) => {
     const user = useSelector((state) => state.user.uid);
     const guest = useSelector((state) => state.guest);
-    const navigate = useNavigate();
     const { clubID } = useParams();
-    const [members, setMembers] = React.useState([]);
+
     const [currentUserRole, setCurrentUserRole] = React.useState('');
     const [isAdmin, setIsAdmin] = React.useState(false);
-
-
-    React.useEffect(() => {
-        getClubMembers();
-    }, []);
 
     React.useEffect(() => {
         if (guest.guestMode) {
@@ -116,45 +111,6 @@ const Members = ({ name, onChange }) => {
             setOpenAdminDialog(false);
         }
     };
-
-    // CLUB MEMBERS
-    const getClubMembers = () => {
-
-        callApiGetClubMembers()
-            .then(res => {
-                var parsed = JSON.parse(res.express);
-                setMembers(parsed);
-                if(guest.guestMode){
-                    const dataArray = [...parsed, {"name" : "Guest/Demo", "role": guest.memberType?.[clubID], "uid": "G"}]
-                    const sortedArray = dataArray.sort((a, b) => {
-                        // Define the order of roles
-                        const roleOrder = { "owner": 0, "admin": 1, "user": 2 };
-                        // Compare roles based on the predefined order
-                        return roleOrder[a.role] - roleOrder[b.role];
-                      });
-                    setMembers(sortedArray);
-                }
-            })
-    }
-
-
-    const callApiGetClubMembers = async () => {
-        const url = serverURL + '/api/getClubMembers';
-        const response = await fetch(url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                //authorization: `Bearer ${this.state.token}`
-            },
-            body: JSON.stringify({
-                clubID: clubID
-            })
-        });
-
-        const body = await response.json();
-        if (response.status !== 200) throw Error(body.message);
-        return body;
-    }
 
     const handleUserRoleAfterTransfer = (role) => {
         setCurrentUserRole(role);

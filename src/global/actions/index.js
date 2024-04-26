@@ -15,6 +15,8 @@ export const SET_CLUBS_LIST = 'SET_CLUBS_LIST';
 export const SET_CLUBS_DETAILS = 'SET_CLUBS_DETAILS';
 export const SET_CLUBS_ANNOUNCEMENTS = 'SET_CLUBS_ANNOUNCEMENTS';
 export const SET_CLUBS_EVENTS = 'SET_CLUBS_EVENTS';
+export const SET_DASHBOARD_CLUBS = 'SET_DASHBOARD_CLUBS';
+export const SET_CLUB_MEMBERS = 'SET_CLUB_MEMBERS';
 
 /**
  * User actions
@@ -45,6 +47,13 @@ export const getUserClubMemberships = (clubs) => {
 export const getUserAdminClubs = (clubs) => {
   return {
     type: SET_USER_ADMIN_CLUBS,
+    payload: clubs
+  }
+}
+
+export const setDashboardClubs = (clubs) => {
+  return {
+    type: SET_DASHBOARD_CLUBS,
     payload: clubs
   }
 }
@@ -152,3 +161,10 @@ export const setClubsEvents = (clubID, events) => {
   }
 }
 
+export const setClubMembers = (clubID, members) => {
+  return {
+    type: SET_CLUB_MEMBERS,
+    clubID: clubID,
+    payload: members
+  }
+}

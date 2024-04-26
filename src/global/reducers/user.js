@@ -1,10 +1,11 @@
-import { SET_USER, SET_USER_CLUBS, SET_USER_CLUBS_MEMBERSHIPS, SET_USER_ADMIN_CLUBS } from '../actions';
+import { SET_USER, SET_USER_CLUBS, SET_USER_CLUBS_MEMBERSHIPS, SET_USER_ADMIN_CLUBS, SET_DASHBOARD_CLUBS } from '../actions';
 
 const initialState = {
     loggedIn: false,
     uid: null,
     displayName: null,
     clubs: [],
+    dashboardClubs: [],
     memberships: [],
     admin: [],
   };
@@ -32,6 +33,11 @@ const isLoggedReducer = (state = initialState, action) => {
           return {
             ...state,
             admin: [...state.admin, ...action.payload],
+          };
+        case SET_DASHBOARD_CLUBS:
+          return {
+            ...state,
+            dashboardClubs: action.payload,
           };
       default:
         return state;

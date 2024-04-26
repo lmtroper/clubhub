@@ -1,10 +1,11 @@
-import { SET_CLUBS_LIST, SET_CLUBS_DETAILS, SET_CLUBS_ANNOUNCEMENTS, SET_CLUBS_EVENTS } from '../actions';
+import { SET_CLUBS_LIST, SET_CLUBS_DETAILS, SET_CLUBS_ANNOUNCEMENTS, SET_CLUBS_EVENTS, SET_CLUB_MEMBERS } from '../actions';
 
 const initialState = {
     clubs: [],
     clubAnnouncements: {},
     clubEvents: {},
     clubDetails: {},
+    clubMembers: [],
   };
 
 const clubsReducer = (state = initialState, action) => {
@@ -15,11 +16,9 @@ const clubsReducer = (state = initialState, action) => {
             clubs: action.clubs,
           };
       case SET_CLUBS_DETAILS:
-        console.log('set club details', action.payload)
           return {
             ...state,
             clubDetails: action.payload,
-            
           };
       case SET_CLUBS_ANNOUNCEMENTS:
           return {
@@ -34,6 +33,14 @@ const clubsReducer = (state = initialState, action) => {
             ...state,
             clubEvents: {
               ...state.clubEvents,
+              [action.clubID]: action.payload,
+            },
+          };
+      case SET_CLUB_MEMBERS:
+          return {
+            ...state,
+            clubMembers: {
+              ...state.clubMembers,
               [action.clubID]: action.payload,
             },
           };
